@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Organizer</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="topnav">
+        <a class="home " href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="#bottom">Contact</a>
+    </div>
+
+    <!-- Main page content -->
+    <main>
+        <!-- Page title -->
+        <header class="page-title">
+            <h1>Spotify Playlist Organizer</h1>
+            <p>Let's sort out those playlists!</p>
+        </header>
+        
+        <!-- Form to submit user preferences for playlist sorting -->
+        <div class="form center">
+            <form method="POST" action="/">
+                <!-- Picks which playlists -->
+                <div class="question center">
+                    <label for="playlists">What playlists?
+                        <p>Hold down the Ctrl (Windows) or Command (Mac) button to select multiple options.</p>
+                    </label>
+                    <select name="playlists[]" id="playlists"  multiple>
+                        {% for playlist in playlists %}
+                            <option value="{{ playlist['uri'] }}">{{ playlist['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <!-- Picks which albums -->
+                <div class="question center">
+                    <label for="albums">What albums?
+                        <p>Hold down the Ctrl (Windows) or Command (Mac) button to select multiple options.</p>
+                    </label>
+                    <select name="albums[]" id="albums" multiple>
+                        {% for album in albums %}
+                            <option value="{{ album['uri'] }}">{{ album['name'] }} - {{ album['artists'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <!-- Determines clustering method -->
+                <div class="question center">
+                    <label for="method">What do you care most about in your playlists?</label>
+                    <select name="method" id="method">
+                        <option value="complete">How similar the two most different songs in a playlist are</option>
+                        <option value="ward">How balanced the playlist lengths are</option>
+                    </select>
+                </div>
+    
+                <!-- Determines the distance threshold -->
+                <div class="question center">
+                    <label for="bounds">How many playlists out?</label>
+                    <select name="bounds" id="bounds">
+                        <option value="2,5">2-5</option>
+                        <option value="5,10">5-10</option>
+                        <option value="10,15">10-15</option>
+                        <option value="15,">15+</option>
+                    </select>
+                </div>
+                
+                <input type="submit" class="submit" value="Sort them!">
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="bottom" class="about">
+        <a href="https://github.com/briesroncalli"><i class="fa fa-github"></i>briesroncalli</a>
+        <p>&copy; Spotify 2023 Playlist Organizer</p>
+        <a href="https://www.linkedin.com/in/benjaminriesroncalli/"><i class="fa fa-linkedin-square"></i>benjaminriesroncalli</a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Organizer</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Javascript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript" src="/static/js/playPreview.js"></script>
+    <script type="text/javascript" src="/static/js/switchPlaylistContent.js"></script>
+    <script type="text/javascript" src="/static/js/saveOrDeletePlaylist.js"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/play_preview.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/switch_playlist_content.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/save_playlist.js') }}"></script> -->
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="topnav">
+        <a class="home " href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="#bottom">Contact</a>
+    </div>
+
+    <!-- Main page content -->
+    <main>
+        <!-- Page title -->
+        <div class="page-title center">
+            <h1>Say hello to your new playlists!</h1>
+            <p>We managed to sort your songs into {{ cluster_list | length}} unique groups...</p>
+        </div>
+    
+        <div class="content center">
+        {% set cluster_list_ns = namespace(playlist_idx = 1) %}
+        {% for cluster in cluster_list %}
+        <!-- Create playlist for each cluster -->
+            <div class="playlist" id="{{ cluster_list_ns.playlist_idx }}"">
+                <!-- Button to show songs or playlist avg data -->
+                <button class="switch-content songs selected" onclick="switchPlaylistContent('{{ cluster_list_ns.playlist_idx }}', 0)">Songs</button>
+                <button class="switch-content data" onclick="switchPlaylistContent('{{ cluster_list_ns.playlist_idx }}', 1)">Stats</button>
+                
+                <!-- Playlist title -->
+                <div class="playlist-title">
+                    {{ playlist_descriptions[cluster_list_ns.playlist_idx-1] }}
+                    <button class="button-dark save-playlist" id="{{ cluster_list_ns.playlist_idx }}" onclick="saveOrDeletePlaylist('{{ cluster_list_ns.playlist_idx }}', '{{ cluster | join(',')  }}', '{{ playlist_descriptions[cluster_list_ns.playlist_idx-1] }}')">
+                        <i class="fa fa-plus"></i>
+                        <p>Save Playlist</p>
+                    </button>
+                </div>
+                
+                <!-- Display the tracks in the playlist in a scrollable element -->
+                <div class="tracks">
+                {% set playlist_ns = namespace(song_idx = 1) %}
+                {% for song_uri in cluster %}
+                    <div class="track">
+                        <!-- Display the album cover & button to preview play of song -->
+                        <div class="track__art">
+                            <img class='album' src={{ song_data[song_uri]['album']['images'] }} alt={{ song_data[song_uri]['album']['name'] }}/>
+                            {% if song_data[song_uri]['preview_url'] is not none %}
+                                <a title="Listen to it!" class="fa fa-play play-pause-button"" data-argument={{ song_data[song_uri]['preview_url'] }}></a>
+                            {% endif %}
+                        </div>
+    
+                        <!-- Display track number in playlist -->
+                        <div class="track__number">{{ playlist_ns.song_idx }}</div>
+    
+                        <!-- Display song title -->
+                        <div class="track__title"><a href={{ song_data[song_uri]['external_urls'] }} title="See song on Spotify">{{song_data[song_uri]['name']}}</a></div>
+    
+                        <!-- Display all artists on track -->
+                        <div class="track__artist">
+                            {% for artist in song_data[song_uri]['artists'] %}
+                                    {% if artist != song_data[song_uri]['artists'][-1] %}
+                                        <a href={{ artist['external_urls'] }} title="See artist on Spotify">{{ artist['name'] }}, </a>
+                                    {% else %}
+                                        <a href={{ artist['external_urls'] }} title="See artist on Spotify">{{ artist['name'] }}</a>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                        </div>
+    
+                        <!-- Display song duration -->
+                        <div class="track__duration">{{song_data[song_uri]['duration']}}</div>
+    
+                        {% set playlist_ns.song_idx = playlist_ns.song_idx + 1 %}
+                    </div>
+                {% endfor %}
+                </div>
+    
+                <!-- Display the playlist average statistics -->
+                <div class="stats hidden">
+                    <div class="radar-plot"><img src="data:image/png;base64,{{ radar_chart_uris[cluster_list_ns.playlist_idx-1][0] }}"/></div>
+    
+                    <div class="popularity-plot">
+                        <p>Popularity</p>
+                        <img class="popularity-bar" src="data:image/png;base64,{{ popularity_plot_uris[cluster_list_ns.playlist_idx-1] }}">
+                    </div>
+                    <div class="avg-duration"><p>Average duration {{ durations[cluster_list_ns.playlist_idx] }}</p></div>
+                    <div class="num-songs"><p>{{ cluster|length }} songs</p></div>
+                </div>
+            </div>
+            {% set cluster_list_ns.playlist_idx =  cluster_list_ns.playlist_idx + 1 %}
+        {% endfor %}
+    </main>
+
+    <!-- Footer -->
+    <footer id="bottom" class="about">
+        <a href="https://github.com/briesroncalli"><i class="fa fa-github"></i>briesroncalli</a>
+        <p>&copy; 2023 Spotify Playlist Organizer</p>
+        <a href="https://www.linkedin.com/in/benjaminriesroncalli/"><i class="fa fa-linkedin-square"></i>benjaminriesroncalli</a>
+    </footer>
+</body>
+</html>

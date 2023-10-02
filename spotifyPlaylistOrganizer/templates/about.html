@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Organizer</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="topnav">
+        <a class="home " href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="#bottom">Contact</a>
+    </div>
+
+    <!-- Main page content -->
+    <main>
+        <!-- Page title -->
+        <header class="page-title">
+            <h1>Spotify Playlist Organizer</h1>
+            <p>A simple way to organize or make new playlists</p>
+        </header>
+        
+        <!-- Form to submit user preferences for playlist sorting -->
+        <div class="about-page center">
+            
+            <h1>About</h1>
+            <p>This is a simple Web App that allows a user to organize and generate new playlists from the songs in their saved albums and playlists based on similarities in each song.</p>
+            
+            <h1>How to use</h1>
+            <p>Upon accessing the webpage, the user is immediately redirected to log in to their Spotify account.</p>
+            
+            <img src="../static/images/spotify_login.png" alt="Picture of Login Page"></img>
+
+            <p>Once the user has successfully logged in to their account, they are redirected to the App's Home Page where they are prompted to select which of their saved playlists and albums they would like to organize into new playlists.</p>
+            <p>The user can also adjust their preferences for the way playlists are constructed and the number of playlists they wish to sort the songs into.</p>
+            <img src="../static/images/homepage.png" alt="Picture of Home Page"></img>
+
+            <p>The application then sorts the song into playlists based on audio features of each song, such as danceability, energy, how acoustic it is, and more.</p>
+            <p>The newly organized playlists are then displayed with a short couple adjective description of the qualities of songs in each playlist.</p>
+            <img src="../static/images/playlists.png" alt="Picture of Playlist Page"></img>
+
+            <p>The user can scroll through the playlists to view all of the songs in it and preview 30-second samples of each song by clicking the play button. By clicking on an artist or song name, users can navigate to their respective Spotify pages.</p>
+            <video autoplay loop muted src="../static/images/play_preview.mp4" alt="Video Playing Song Preview"></video>
+
+            <p>Users can also explore the properties of each playlist from the 'Stat' tab to the left of each playlist, which displays the number of songs in the playlist as well as their average features, popularity, and duration.</p>
+            <video autoplay loop muted src="../static/images/stats.mp4" alt="Video of Playlist Stats"></video>
+
+            <p>If a user likes a playlist, they can save it by clicking the 'Save Playlist' button in the top right of the playlist. The button updates to show that it has been saved.</p>
+            <p>If a user saves a playlist by accident, they can remove it from their playlist by simply reclicking the updated button.</p>
+
+            <video autoplay loop muted src="../static/images/saving_playlist.mp4" alt="Video of Saving Playlist"></video>
+
+
+            <h1>Implementation</h1>
+            <p>The application uses the <a href="https://developer.spotify.com/documentation/web-api">Spotify API</a> to access information about songs in a user's saved playlists and albums. It feeds features Spotify collects about the audio features of each song to a hierarchical clustering model. The user can make selections about their preferences for the resulting cluster's on the App's Home Page. These preferences are then translated into parameters and instructions for the clustering algorithm, which returns playlist grouping songs together based on similarity.</p>
+            
+            <p>More information about the data the algorithm uses to cluster songs can be found at <a href="https://developer.spotify.com/documentation/web-api/reference/get-audio-features">Spotify API Audio Features</a>.</p>
+            
+            <p>The hierarchical clustering algorithm is implemented in <code>Python</code> with the use of the <code>scipy</code> library.</p>
+
+            <p>See the full project on <a href="https://github.com/briesroncalli/spotify-playlist-organizer">GitHub</a>.</p>
+              
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="bottom" class="about">
+        <a href="https://github.com/briesroncalli"><i class="fa fa-github"></i>briesroncalli</a>
+        <p>&copy; 2023 Spotify Playlist Organizer</p>
+        <a href="https://www.linkedin.com/in/benjaminriesroncalli/"><i class="fa fa-linkedin-square"></i>benjaminriesroncalli</a>
+    </footer>
+</body>
+</html>
