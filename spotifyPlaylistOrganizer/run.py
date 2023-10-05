@@ -4,6 +4,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from flask import Flask, request, url_for, session, redirect, render_template, json
 import atexit
+import os
 
 # initialize Flask app
 app = Flask(__name__)
@@ -593,7 +594,14 @@ def create_spotify_oauth():
 def clear_json_data():
     with open('spotifyPlaylistOrganizer/data/songs.json', 'w') as file:
         json.dump({}, file)
+        
+# deletes cache file at program exit
+def clear_cache():
+    if os.path.exists("./cache.txt"):
+        os.remove("./cache.txt")
+
 atexit.register(clear_json_data)
+atexit.register(clear_cache)
 
 # about page
 @app.route('/about')
