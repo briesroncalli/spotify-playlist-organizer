@@ -555,7 +555,6 @@ def delete_playlist():
     sp = spotipy.Spotify(auth=token_info['access_token'])
     data = request.get_json()
     name = data.get('name')
-    user_id = sp.me()['id']
     playlist_dict, _  = get_user_playlists_albums()
     for _, playlist in playlist_dict.items():
         if playlist['name'] == name:
@@ -582,13 +581,12 @@ def get_token():
 def create_spotify_oauth():
     with open('client-info.json', 'r') as f:
         client_info = json.load(f)
-        print('id:',client_info['client_id'])
-        print('secret:',client_info['client_secret'])
     return SpotifyOAuth(
         client_id = client_info['client_id'],
         client_secret = client_info['client_secret'],
         redirect_uri = url_for('redirect_page', _external=True),
-        scope='user-library-read playlist-modify-public playlist-modify-private'
+        scope='user-library-read playlist-modify-public playlist-modify-private',
+        cache_path="./cache.txt"
     )
 
 # Function to clear the JSON data at program exit
